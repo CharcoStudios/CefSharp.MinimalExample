@@ -13,6 +13,8 @@
         video {
             width: 320px;
             height: 240px;
+            border: 2px solid red;
+
         }
     </style>
 
@@ -33,10 +35,23 @@
         $(() => {
 
             $("video").each((i, v) => {
-                v.oncanplay = () => $(v).after("<p>Time " + v.currentTime+ ", Seekable from " + v.seekable.start(0) + " to " + v.seekable.end(0)+"</p > ");
-                v.currentTime = 15;
+                v.oncanplay = () => $(v).after("<p>Time " + v.currentTime + ", Seekable from " + v.seekable.start(0) + " to " + v.seekable.end(0) + "</p > ");
+                v.currentTime = (v.duration || 20) - 5;
                 v.play();
-            });            
+
+                var btn = $('<input/>', {
+                    type: 'button',
+                    value: 'Seek',
+                    on: {
+                        click: function () {
+                            v.currentTime = ( v.duration - 5) | 0;
+                            v.play();
+                        }
+                    }
+                });
+
+                $(v).parent().append(btn);
+            });
         });
 
     </script>
@@ -48,30 +63,38 @@
         <div>
             <h2>Web</h2>
             <p>Loads from sec 15 without problem</p>
-            <video id="vid1" style="border: 2px solid red" controls>
-                <source src="http://video.webmfiles.org/big-buck-bunny_trailer.webm" type="video/webm" />
+            <video controls>
+                <source src="http://usuarios.cuma.es/library/9d/9d7de481f99d6f28b1ebfa8ac49d3f99.mp4" type="video/mp4" />
+                <!--<source src="http://video.webmfiles.org/big-buck-bunny_trailer.webm" type="video/webm" />-->
             </video>
         </div>
-        <div>
+        <!--<div>
             <h2>Local: Custom Scheme Handler</h2>
             <p>Does not load</p>
-            <video id="vid2" style="border: 2px solid red" controls>
+            <video  controls>
                 <source src="proxy://video[random].webm" type="video/webm" />
             </video>
-        </div>
-        <div>
+        </div>-->
+        <!--<div>
             <h2>Local: Custom Resource Handler</h2>
             <p>Loads and play from sec 0</p>
-            <video id="vid3" style="border: 2px solid red" controls>
+            <video  controls>
                 <source src="http://proxy/video[random].webm" type="video/webm" />
             </video>
-        </div>
+        </div>-->
 
         <div>
-            <h2>Local: Custom Resource Handler With Range</h2>
+            <h2>Local: Custom Resource Handler With Range (Webm)</h2>
             <p>Send Accept-Ranges and streaming from the offset specified in range, but does not load</p>
-            <video id="vid3" style="border: 2px solid red" controls>
+            <video controls>
                 <source src="http://proxy.range/video[random].webm" type="video/webm" />
+            </video>
+        </div>
+        <div>
+            <h2>Local: Custom Resource Handler With Range (Mp4)</h2>
+            <p>Send Accept-Ranges and streaming from the offset specified in range, but does not load</p>
+            <video controls>
+                <source src="http://proxy.range/video[random].mp4" type="video/mp4" />
             </video>
         </div>
 
