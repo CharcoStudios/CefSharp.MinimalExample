@@ -1,3 +1,7 @@
+Forked from CefSharp.MinimalExample
+
+Demonstrate how load resources from local with range header support, letting videos to be seekable in video player.
+
 CefSharp.MinimalExample
 =======================
 
