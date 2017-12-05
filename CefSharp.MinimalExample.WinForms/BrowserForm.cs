@@ -33,6 +33,7 @@ namespace CefSharp.MinimalExample.WinForms
             browser.AddressChanged += OnBrowserAddressChanged;
 
             browser.ResourceHandlerFactory = new CustomResourceHandlerFactory();
+            browser.KeyboardHandler = new CustomKeyboardHandler();
 
             var bitness = Environment.Is64BitProcess ? "x64" : "x86";
             var version = String.Format("Chromium: {0}, CEF: {1}, CefSharp: {2}, Environment: {3}", Cef.ChromiumVersion, Cef.CefVersion, Cef.CefSharpVersion, bitness);
@@ -169,7 +170,7 @@ namespace CefSharp.MinimalExample.WinForms
 
         private void LoadTest()
         {
-            var html = Properties.Resources.Test01;
+            var html = Properties.Resources.Test01.Replace("[random]", Guid.NewGuid().ToString());
 
             browser.LoadString(html, "http://test/Video01");
         }

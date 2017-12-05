@@ -18,7 +18,7 @@ namespace CefSharp.MinimalExample.WinForms
                 using (callback)
                 {
 
-                    var acceptRanges = request.Url.StartsWith("proxy.range");
+                    var acceptRanges = request.Url.StartsWith("http://proxy.range");
 
                     var filePath = Path.GetFullPath(@"Resources\big-buck-bunny_trailer.webm");
 
@@ -36,7 +36,13 @@ namespace CefSharp.MinimalExample.WinForms
                             var offset = long.Parse(m.Groups[1].Value);
                             var length = string.IsNullOrEmpty(m.Groups[2].Value) ? (long?)null : long.Parse(m.Groups[2].Value);
 
-                            if (offset == 0) Stream = File.OpenRead(filePath);
+                            if (offset == 0)
+                            {
+                                Headers.Add("Range", "bytes=0-");
+                                Stream = File.OpenRead(filePath);
+                                StatusCode = (int)HttpStatusCode.OK;
+                                //StatusCode = (int)HttpStatusCode.PartialContent;
+                            }
                             else
                             {
                                 var cropped = new MemoryStream();
@@ -47,10 +53,10 @@ namespace CefSharp.MinimalExample.WinForms
                                     cropped.Position = 0;
                                     Stream = cropped;
                                 }
+                                Headers.Add("Range", "bytes=" + offset + "-"+Stream.Length);
+                                StatusCode = (int)HttpStatusCode.PartialContent;
                             }
                             // https://developer.mozilla.org/en-US/docs/Web/HTTP/Configuring_servers_for_Ogg_media
-                            Headers.Add("Range", "bytes=" + offset + "-");
-                            StatusCode = (int)HttpStatusCode.PartialContent;
                             Streamed = true;
                         }                     
                     }
@@ -61,7 +67,7 @@ namespace CefSharp.MinimalExample.WinForms
                         StatusCode = (int)HttpStatusCode.OK;
                     }
 
-                    MimeType = "video/" + Path.GetExtension(filePath);
+                    MimeType = "video/" + Path.GetExtension(filePath).Substring(1);
                     ResponseLength = Stream.Length;
 
                     callback.Continue();
