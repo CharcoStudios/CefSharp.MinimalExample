@@ -1,0 +1,27 @@
+﻿WEB
+Request URL:http://video.webmfiles.org/big-buck-bunny_trailer.webm
+Request Method:GET
+Status Code:206 Partial Content
+Remote Address:78.129.252.183:80
+Referrer Policy:no-referrer-when-downgrade
+
+Response Headers
+
+Accept-Ranges:bytes
+Cache-Control:max-age=2592000
+Connection:Keep-Alive
+Content-Length:2165175
+Content-Range:bytes 0-2165174/2165175
+Content-Type:video/webm
+Date:Tue, 05 Dec 2017 16:51:49 GMT
+Keep-Alive:timeout=5, max=100
+Last-Modified:Mon, 09 Jan 2017 19:46:26 GMT
+Server:Apache
+
+Request Headers
+
+Provisional headers are shown
+Accept-Encoding:identity;q=1, *;q=0
+Range:bytes=0-
+Referer:http://test/Video01
+User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36
