@@ -37,6 +37,7 @@
             this.forwardButton = new System.Windows.Forms.ToolStripButton();
             this.urlTextBox = new System.Windows.Forms.ToolStripTextBox();
             this.goButton = new System.Windows.Forms.ToolStripButton();
+            this.tsbPlayVideo = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,13 +55,13 @@
             // 
             this.toolStripContainer.ContentPanel.Controls.Add(this.statusLabel);
             this.toolStripContainer.ContentPanel.Controls.Add(this.outputLabel);
-            this.toolStripContainer.ContentPanel.Size = new System.Drawing.Size(730, 441);
+            this.toolStripContainer.ContentPanel.Size = new System.Drawing.Size(855, 441);
             this.toolStripContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStripContainer.LeftToolStripPanelVisible = false;
             this.toolStripContainer.Location = new System.Drawing.Point(0, 24);
             this.toolStripContainer.Name = "toolStripContainer";
             this.toolStripContainer.RightToolStripPanelVisible = false;
-            this.toolStripContainer.Size = new System.Drawing.Size(730, 466);
+            this.toolStripContainer.Size = new System.Drawing.Size(855, 466);
             this.toolStripContainer.TabIndex = 0;
             this.toolStripContainer.Text = "toolStripContainer1";
             // 
@@ -94,11 +95,12 @@
             this.backButton,
             this.forwardButton,
             this.urlTextBox,
-            this.goButton});
+            this.goButton,
+            this.tsbPlayVideo});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Padding = new System.Windows.Forms.Padding(0);
-            this.toolStrip1.Size = new System.Drawing.Size(730, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(855, 25);
             this.toolStrip1.Stretch = true;
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Layout += new System.Windows.Forms.LayoutEventHandler(this.HandleToolStripLayout);
@@ -139,13 +141,24 @@
             this.goButton.Text = "Go";
             this.goButton.Click += new System.EventHandler(this.GoButtonClick);
             // 
+            // tsbPlayVideo
+            // 
+            this.tsbPlayVideo.BackColor = System.Drawing.Color.Crimson;
+            this.tsbPlayVideo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tsbPlayVideo.Image = ((System.Drawing.Image)(resources.GetObject("tsbPlayVideo.Image")));
+            this.tsbPlayVideo.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbPlayVideo.Name = "tsbPlayVideo";
+            this.tsbPlayVideo.Size = new System.Drawing.Size(50, 22);
+            this.tsbPlayVideo.Text = "Video 1";
+            this.tsbPlayVideo.Click += new System.EventHandler(this.tsbPlayVideo_Click);
+            // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(730, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(855, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -160,7 +173,7 @@
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitMenuItemClick);
             // 
@@ -168,7 +181,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(730, 490);
+            this.ClientSize = new System.Drawing.Size(855, 490);
             this.Controls.Add(this.toolStripContainer);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -203,6 +216,6 @@
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.Label outputLabel;
         private System.Windows.Forms.Label statusLabel;
-
+        private System.Windows.Forms.ToolStripButton tsbPlayVideo;
     }
 }

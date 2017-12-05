@@ -32,9 +32,21 @@ namespace CefSharp.MinimalExample.WinForms
             browser.TitleChanged += OnBrowserTitleChanged;
             browser.AddressChanged += OnBrowserAddressChanged;
 
+            browser.ResourceHandlerFactory = new CustomResourceHandlerFactory();
+
             var bitness = Environment.Is64BitProcess ? "x64" : "x86";
             var version = String.Format("Chromium: {0}, CEF: {1}, CefSharp: {2}, Environment: {3}", Cef.ChromiumVersion, Cef.CefVersion, Cef.CefSharpVersion, bitness);
             DisplayOutput(version);
+
+            browser.IsBrowserInitializedChanged += Browser_IsBrowserInitializedChanged;
+        }
+
+        private void Browser_IsBrowserInitializedChanged(object sender, IsBrowserInitializedChangedEventArgs e)
+        {
+            if (e.IsBrowserInitialized)
+            {
+                LoadTest();
+            }
         }
 
         private void OnBrowserConsoleMessage(object sender, ConsoleMessageEventArgs args)
@@ -148,6 +160,18 @@ namespace CefSharp.MinimalExample.WinForms
             {
                 browser.Load(url);
             }
+        }
+
+        private void tsbPlayVideo_Click(object sender, EventArgs e)
+        {
+            LoadTest();
+        }
+
+        private void LoadTest()
+        {
+            var html = Properties.Resources.Test01;
+
+            browser.LoadString(html, "http://test/Video01");
         }
     }
 }
