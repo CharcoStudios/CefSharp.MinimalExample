@@ -117,13 +117,22 @@ namespace CefSharp.MinimalExample.WinForms.Properties {
         ///&lt;head&gt;
         ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
         ///    &lt;title&gt;&lt;/title&gt;
-        ///&lt;/head&gt;
-        ///&lt;body&gt;
-        ///    &lt;video&gt;
-        ///        &lt;source src=&quot;cumaproxy://video1&quot;/&gt;
-        ///    &lt;/video&gt;
-        ///&lt;/body&gt;
-        ///&lt;/html&gt;.
+        ///    &lt;style&gt;
+        ///        div {
+        ///            float: left;
+        ///            margin-right: 20px;
+        ///        }
+        ///
+        ///        video {
+        ///            width: 320px;
+        ///            height: 240px;
+        ///            border: 2px solid red;
+        ///
+        ///        }
+        ///    &lt;/style&gt;
+        ///
+        ///    &lt;script&gt;
+        ///        /*! jQuery v3.2.1 slim -ajax,-ajax/jsonp,-ajax/load,-ajax/parseXML,-ajax/script,-ajax/var/location,-ajax/var/nonce,-ajax [resto de la cadena truncado]&quot;;.
         /// </summary>
         internal static string Test01 {
             get {

@@ -15,8 +15,8 @@ namespace CefSharp.MinimalExample.WinForms
         {
             switch (ext)
             {
-                case "mp4": return Path.GetFullPath(@"Resources\Coldplay - A Sky Full Of Stars (Official Video).mp4");
-                case "webm": return Path.GetFullPath(@"Resources\Coldplay - A Sky Full Of Stars (Official Video).webm");
+                case "mp4": return Path.GetFullPath(@"Resources\elephants-dream.mp4");
+                case "webm": return Path.GetFullPath(@"Resources\elephants-dream.webm");
                     //  case "webm": return Path.GetFullPath(@"Resources\big-buck-bunny_trailer.webm");
             }
             return null;
@@ -38,12 +38,9 @@ namespace CefSharp.MinimalExample.WinForms
 
                     if (acceptRanges)
                     {  
-                        Headers.Add("Accept-Ranges", "bytes");
-                        Headers.Add("Date", DateTime.Now.ToUniversalTime().ToString("r"));
-                        //Headers.Add("Cache-Control", "max-age=2592000");
-                        //Headers.Add("Connection", "Keep-Alive");
-                        //Headers.Add("Keep-Alive","timeout=5,max=100");
-
+                        Headers.Add("accept-ranges", "bytes");
+                        Headers.Add("connection", "keep-alive");
+                        
                         var range = (request.Headers.Get("Range"));
 
                         if (range != null)
@@ -55,36 +52,32 @@ namespace CefSharp.MinimalExample.WinForms
                             if (offset == 0)
                             {
                                 var stream = File.OpenRead(filePath); ;
-                                Headers.Add("Content-Length", "" + stream.Length);
-                                Headers.Add("Content-Range", "bytes=0-"+(stream.Length-1)+"/"+stream.Length);
+                                Headers.Add("content-length", "" + stream.Length);
+                                Headers.Add("content-range", "bytes=0-"+(stream.Length-1)+"/"+stream.Length);
                                 Stream = stream;
                                 //StatusCode = (int)HttpStatusCode.OK;
                                 StatusCode = (int)HttpStatusCode.PartialContent;
-                                StatusText = "Partial Content";
+                                StatusText = "partial content";
                             }
                             else
                             {
                                 var cropped = new MemoryStream();
                                 var total = 0L;
                                 var partial = 0L;
-                                //using (var f = File.OpenRead(filePath))
-                                //{
-                                //total = f.Length;
-                                //f.Seek(offset, SeekOrigin.Begin);
-                                //f.CopyTo(cropped);
-                                //cropped.Position = 0;                                    
-                                //Stream = cropped;
-                                //partial = cropped.Length;                                   
-                                //}
-                                var f = File.OpenRead(filePath);
-                                f.Position = offset;
-                                total = f.Length;
-                                partial = total - offset;
+                                using (var f = File.OpenRead(filePath))
+                                {
+                                    total = f.Length;
+                                    f.Seek(offset, SeekOrigin.Begin);
+                                    f.CopyTo(cropped);
+                                    cropped.Position = 0;
+                                    Stream = cropped;
+                                    partial = cropped.Length;
+                                }                               
 
-                                Headers.Add("Content-Length", ""+partial);
-                                Headers.Add("Content-Range", "bytes=" + offset + "-" + (total - 1) + "/" + total);
+                                Headers.Add("content-length", ""+partial);
+                                Headers.Add("content-range", "bytes=" + offset + "-" + (total - 1) + "/" + total);
                                 StatusCode = (int)HttpStatusCode.PartialContent;
-                                StatusText = "Partial Content";
+                                StatusText = "partial content";
                             }
                             // https://developer.mozilla.org/en-US/docs/Web/HTTP/Configuring_servers_for_Ogg_media
                             Streamed = true;

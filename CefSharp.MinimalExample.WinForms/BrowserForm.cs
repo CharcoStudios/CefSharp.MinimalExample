@@ -6,6 +6,7 @@ using System;
 using System.Windows.Forms;
 using CefSharp.MinimalExample.WinForms.Controls;
 using CefSharp.WinForms;
+using System.IO;
 
 namespace CefSharp.MinimalExample.WinForms
 {
@@ -23,6 +24,7 @@ namespace CefSharp.MinimalExample.WinForms
             browser = new ChromiumWebBrowser("www.google.com")
             {
                 Dock = DockStyle.Fill,
+
             };
             toolStripContainer.ContentPanel.Controls.Add(browser);
 
@@ -34,6 +36,10 @@ namespace CefSharp.MinimalExample.WinForms
 
             browser.ResourceHandlerFactory = new CustomResourceHandlerFactory();
             browser.KeyboardHandler = new CustomKeyboardHandler();
+
+            browser.BrowserSettings.FileAccessFromFileUrls = CefState.Enabled;
+            browser.BrowserSettings.UniversalAccessFromFileUrls = CefState.Enabled;
+            browser.BrowserSettings.WebSecurity = CefState.Disabled;
 
             var bitness = Environment.Is64BitProcess ? "x64" : "x86";
             var version = String.Format("Chromium: {0}, CEF: {1}, CefSharp: {2}, Environment: {3}", Cef.ChromiumVersion, Cef.CefVersion, Cef.CefSharpVersion, bitness);
@@ -170,7 +176,9 @@ namespace CefSharp.MinimalExample.WinForms
 
         private void LoadTest()
         {
-            var html = Properties.Resources.Test01.Replace("[random]", Guid.NewGuid().ToString());
+            var html = Properties.Resources.Test01
+                .Replace("[random]", Guid.NewGuid().ToString())
+                .Replace("[RESOURCESPATH]", Path.GetFullPath("Resources"));
 
             browser.LoadString(html, "http://test/Video01");
         }
