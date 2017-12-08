@@ -78,6 +78,7 @@
     </Compile>
     <Compile Include="Controls\ControlExtensions.cs" />
     <Compile Include="CustomKeyboardHandler.cs" />
+    <Compile Include="CustomRequestHandler.cs" />
     <Compile Include="CustomResourceHandler.cs" />
     <Compile Include="CustomSchemeHandler.cs" />
     <Compile Include="Program.cs">

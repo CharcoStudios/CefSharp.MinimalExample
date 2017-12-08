@@ -98,19 +98,19 @@
                 <source src="http://proxy.range/elephants-dream.webm" type="video/webm" />
             </video>
         </div>
-        <div>
+        <!--<div>
             <h2>Resource Handler With Range (Mp4)</h2>
             <p>Send Accept-Ranges and streaming from the offset specified in range, but does not load</p>
             <video controls>
                 <source src="http://proxy.range/elephants-dream.mp4" type="video/mp4" />
             </video>
-        </div>
-        <div>
+        </div>-->
+        <!--<div>
             <h2>Nancy server (Mp4)</h2>
             <video controls>
                 <source src="http://localhost:9696/elephants-dream.mp4" type="video/mp4" />
             </video>
-        </div>
+        </div>-->
         <div>
             <h2>Nancy server (Webm)</h2>
             <video controls>
@@ -122,6 +122,13 @@
             <h2>File (Webm)</h2>
             <video controls>
                 <source src="file://[RESOURCESPATH]/elephants-dream.webm" type="video/webm" />
+            </video>
+        </div>
+
+        <div>
+            <h2>Redirected to nancy (Webm)</h2>
+            <video controls>
+                <source src="http://foo.web.com/elephants-dream.webm" type="video/webm" />
             </video>
         </div>
 

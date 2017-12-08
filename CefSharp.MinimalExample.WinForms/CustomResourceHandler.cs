@@ -9,9 +9,10 @@ using System.Threading.Tasks;
 
 namespace CefSharp.MinimalExample.WinForms
 {
-    public class CustomResourceHandler : ResourceHandler
+
+    class Resources
     {
-        string getFilePath(string ext)
+        public static string GetFilePath(string ext)
         {
             switch (ext)
             {
@@ -21,6 +22,37 @@ namespace CefSharp.MinimalExample.WinForms
             }
             return null;
         }
+    }
+    public class ProxyResourceHandler : ResourceHandler
+    {
+        public override bool ProcessRequestAsync(IRequest request, ICallback callback)
+        {
+            Task.Run(() =>
+            {
+                using (callback)
+                {
+                    var extension = Path.GetExtension(request.Url).TrimStart('.').ToLower();
+
+                    var filePath = Resources.GetFilePath(extension);
+
+                    Stream = File.OpenRead(filePath);
+                    StatusCode = (int)HttpStatusCode.OK;
+                    StatusText = "OK";
+                    MimeType = "video/" + extension;
+                    ResponseLength = Stream.Length;
+
+                    callback.Continue();
+                }
+            });
+
+            return true;
+        }
+    }
+
+    public class ProxyPartialRepsonseResourceHandler : ResourceHandler
+    {
+        // https://developer.mozilla.org/en-US/docs/Web/HTTP/Configuring_servers_for_Ogg_media
+
         public override bool ProcessRequestAsync(IRequest request, ICallback callback)
         {
             Task.Run(() =>
@@ -28,73 +60,42 @@ namespace CefSharp.MinimalExample.WinForms
                 using (callback)
                 {
 
-                    var acceptRanges = request.Url.StartsWith("http://proxy.range");
-
                     var extension = Path.GetExtension(request.Url).TrimStart('.').ToLower();
 
-                    var filePath = getFilePath(extension);
+                    var filePath = Resources.GetFilePath(extension);
+                    var stream = File.OpenRead(filePath);
+                    var len = stream.Length;
+                    var startI = 0L;
 
-                    var Streamed = false;
+                    Headers.Add("accept-ranges", "bytes");
+                    Headers.Add("connection", "keep-alive");
 
-                    if (acceptRanges)
-                    {  
-                        Headers.Add("accept-ranges", "bytes");
-                        Headers.Add("connection", "keep-alive");
-                        
-                        var range = (request.Headers.Get("Range"));
+                    var range = (request.Headers.Get("Range"));
 
-                        if (range != null)
-                        {
-                            var m = Regex.Match(range, @"bytes=(\d+)-(\d*)?");
-                            var offset = long.Parse(m.Groups[1].Value);
-                            var length = string.IsNullOrEmpty(m.Groups[2].Value) ? (long?)null : long.Parse(m.Groups[2].Value);
-
-                            if (offset == 0)
-                            {
-                                var stream = File.OpenRead(filePath); ;
-                                Headers.Add("content-length", "" + stream.Length);
-                                Headers.Add("content-range", "bytes=0-"+(stream.Length-1)+"/"+stream.Length);
-                                Stream = stream;
-                                //StatusCode = (int)HttpStatusCode.OK;
-                                StatusCode = (int)HttpStatusCode.PartialContent;
-                                StatusText = "partial content";
-                            }
-                            else
-                            {
-                                var cropped = new MemoryStream();
-                                var total = 0L;
-                                var partial = 0L;
-                                using (var f = File.OpenRead(filePath))
-                                {
-                                    total = f.Length;
-                                    f.Seek(offset, SeekOrigin.Begin);
-                                    f.CopyTo(cropped);
-                                    cropped.Position = 0;
-                                    Stream = cropped;
-                                    partial = cropped.Length;
-                                }                               
-
-                                Headers.Add("content-length", ""+partial);
-                                Headers.Add("content-range", "bytes=" + offset + "-" + (total - 1) + "/" + total);
-                                StatusCode = (int)HttpStatusCode.PartialContent;
-                                StatusText = "partial content";
-                            }
-                            // https://developer.mozilla.org/en-US/docs/Web/HTTP/Configuring_servers_for_Ogg_media
-                            Streamed = true;
-                            //StatusCode = (int)HttpStatusCode.PartialContent;
-                            //Headers.Add("Content-Range", "bytes=" + offset + "-" + (Stream.Length - 1) + "/" + Stream.Length);
-                        }
-                    }
-
-                    if (!Streamed)
+                    if (range != null)
                     {
-                        Stream = File.OpenRead(filePath);
-                        StatusCode = (int)HttpStatusCode.OK;
-                        StatusText = "OK";
+                        var start = range.Split('=')[1];
+                        var m = Regex.Match(start, @"(\d+)-(\d+)?");
+                        start = m.Groups[1].Value;
+                        var end = len - 1;
+                        if (m.Groups[2] != null && !string.IsNullOrWhiteSpace(m.Groups[2].Value))
+                        {
+                            end = Convert.ToInt64(m.Groups[2].Value);
+                        }
+
+                        startI = Convert.ToInt64(start);
+                        var length = len - startI;
+                        Headers.Add("content-range", "bytes " + start + "-" + end + "/" + len);
+                        Headers.Add("content-length", length.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
+                        stream.Seek(startI, SeekOrigin.Begin);
+                        len = length;
                     }
 
+                    StatusCode = (int)HttpStatusCode.PartialContent;
+                    StatusText = "Partial Content";
                     MimeType = "video/" + extension;
-                    ResponseLength = Stream.Length;
+                    ResponseLength = len;
 
                     callback.Continue();
                 }
@@ -114,8 +115,8 @@ namespace CefSharp.MinimalExample.WinForms
         IResourceHandler IResourceHandlerFactory.GetResourceHandler(IWebBrowser browserControl, IBrowser browser, IFrame frame, IRequest request)
         {
             System.Diagnostics.Debug.WriteLine(request.Url);
-            if (request.Url.StartsWith("http://proxy"))
-                return new CustomResourceHandler();
+            if (request.Url.StartsWith("http://proxy.range")) return new ProxyPartialRepsonseResourceHandler();
+            else if (request.Url.StartsWith("http://proxy")) return new ProxyResourceHandler();
             return null;
         }
     }

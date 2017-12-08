@@ -34,6 +34,7 @@ namespace CefSharp.MinimalExample.WinForms
             browser.TitleChanged += OnBrowserTitleChanged;
             browser.AddressChanged += OnBrowserAddressChanged;
 
+            browser.RequestHandler = new CustomRequestHandler();
             browser.ResourceHandlerFactory = new CustomResourceHandlerFactory();
             browser.KeyboardHandler = new CustomKeyboardHandler();
 

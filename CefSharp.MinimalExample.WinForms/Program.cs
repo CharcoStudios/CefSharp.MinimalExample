@@ -75,13 +75,15 @@ namespace CefSharp.MinimalExample.WinForms
 
 namespace Nancy
 {
-
+  
     using System;
     using System.IO;
     using System.Text.RegularExpressions;
 
     public static class NancyEx
     {
+        // http://richardssoftware.net/Home/Post/61
+
         public static Response FromPartialFile(this IResponseFormatter f, Request req, string path, string contentType)
         {
             return f.FromPartialStream(req, new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read), contentType);
